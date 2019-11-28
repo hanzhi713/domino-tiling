@@ -22,13 +22,34 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="container mt-4">
         <div class="row justify-content-center">
-            <div class="col-md-auto">
-                <canvas width="640px" height="640px" id="canvas"></canvas>
+            <div class="col-xs-auto align-self-center">
+                <div><canvas id="canvas"></canvas></div>
+                <div><canvas id="algo"></canvas></div>
             </div>
-            <div class="col-md-auto">
-                <input type="file" onchange="handleImage(this)">
+            <div class="col-xs-auto align-self-center">
+                <div class="custom-file mb-3">
+                    <input type="file" class="custom-file-input" id="customFile" onchange="handleImage(this)">
+                    <label class="custom-file-label" for="customFile">Choose Image</label>
+                </div>
+
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Target Size</span>
+                    </div>
+                    <input type="number" id="target-size" class="form-control" value="180">
+                </div>
+
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Threshold</span>
+                    </div>
+                    <input type="number" id="threshold" class="form-control" value="127">
+                </div>
+
+                <button class="btn btn-primary" onclick="thresh()" >Preview Threshold</button>
             </div>
         </div>
     </div>
