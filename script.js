@@ -8,10 +8,10 @@ const _allColors = [
     '#355dff',
     '#7790ff'
 ];
-
-const allColors = _allColors.map(x => (parseInt(x.substring(1), 16) << 8) | 255);
-
 const defaultColors = _allColors.concat();
+
+// colors in 32-bit integer (RGBA)
+const allColors = _allColors.map(x => (parseInt(x.substring(1), 16) << 8) | 255);
 
 window.onload = () => {
     const colors = document.getElementById('colors');
@@ -116,6 +116,7 @@ function fixWH() {
 }
 
 function draw() {
+    document.getElementById('result').innerHTML = '';
     const [w, h] = fixWH();
     const ratio = h / w;
     canvasAlgo.width = w;
@@ -123,16 +124,25 @@ function draw() {
     canvasUser.height = ratio * canvasUser.width;
 
     ctxAlgo.imageSmoothingEnabled = false;
-    ctxAlgo.clearRect(0, 0, canvasUser.width, canvasUser.height);
     ctxAlgo.drawImage(img, 0, 0, canvasAlgo.width, canvasAlgo.height);
 
     ctxUser.imageSmoothingEnabled = false;
-    ctxUser.clearRect(0, 0, canvasUser.width, canvasUser.height);
     ctxUser.drawImage(img, 0, 0, canvasUser.width, canvasUser.height);
 }
 
-img.onload = draw;
+img.onload = () => {
+    // clear one of the input to let fixWH to automatically adjust
+    // so the aspect ratio is correct
+    const temp = keepAspectRatio.checked;
+    keepAspectRatio.checked = false;
+    targetHeightInput.value = '';
+    keepAspectRatio.checked = temp;
+    draw();
+}
 
+/**
+ * @param {HTMLInputElement} input 
+ */
 function handleImage(input) {
     const reader = new FileReader();
     reader.onload = function (event) {
@@ -212,8 +222,8 @@ function drawTiling() {
     const edges = [];
     const r = canvasAlgo.height, c = canvasAlgo.width;
     let a = 0, b = 0;
-    const labelMap = new Int32Array(r * c).fill(-1);
-    const revMap1 = [];
+    const labelMap = new Int32Array(r * c).fill(-1); // from flattened pixel to node index in graph
+    const revMap1 = []; // reverse map: from node index to flattened pixel index
     const revMap2 = [];
     for (let i = 0; i < r; i++) {
         for (let j = 0; j < c; j++) {
@@ -224,7 +234,6 @@ function drawTiling() {
                     labelMap[current] = a++;
                     revMap1.push(current);
                 } else {
-                    2
                     labelMap[current] = b++;
                     revMap2.push(current);
                 }
@@ -252,5 +261,10 @@ function drawTiling() {
         }
     }
     const result = bipartiteMatching(a, b, edges);
+    if (result.length === (revMap1.length + revMap2.length) / 2) {
+        document.getElementById('result').innerHTML = 'Perfect tiling! Every pixel is covered';
+    } else {
+        document.getElementById('result').innerHTML = 'Imperfect tiling: Some pixels are not covered. To obtain a perfect tiling, try to adjust the threshold or target image size.';
+    }
     dominoes(result.map(([x1, x2]) => [revMap1[x1], revMap2[x2]]));
 }

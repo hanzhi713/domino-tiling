@@ -32,8 +32,8 @@
 
 <body>
     <div class="container mt-4">
-        <div class="row justify-content-center">
-            <div class="col-xs-auto align-self-center mr-2">
+        <div class="row justify-content-center flex-nowrap">
+            <div class="col-xs-auto align-self-center mr-3">
                 <div><canvas id="canvas"></canvas></div>
                 <div><canvas id="algo"></canvas></div>
             </div>
@@ -76,6 +76,8 @@
                 <button class="btn btn-primary" onclick="draw()">Draw Original</button>
                 <button class="btn btn-primary" onclick="thresh()">Preview Threshold</button>
                 <button class="btn btn-primary" onclick="drawTiling()">Draw Tiling</button>
+
+                <div class="mt-3" id="result" style="font-size: 16px;"></div>
             </div>
         </div>
     </div>
