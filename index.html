@@ -19,12 +19,21 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/themes/nano.min.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@simonwep/pickr/dist/pickr.es5.min.js"></script>
+
+    <style>
+        .pickr {
+            display: inline;
+        }
+    </style>
 </head>
 
 <body>
     <div class="container mt-4">
         <div class="row justify-content-center">
-            <div class="col-xs-auto align-self-center">
+            <div class="col-xs-auto align-self-center mr-2">
                 <div><canvas id="canvas"></canvas></div>
                 <div><canvas id="algo"></canvas></div>
             </div>
@@ -34,13 +43,25 @@
                     <label class="custom-file-label" for="customFile">Choose Image</label>
                 </div>
 
-
-                <div class="input-group mb-3">
+                <div class="input-group mb-1">
                     <div class="input-group-prepend">
-                        <span class="input-group-text">Target Size</span>
+                        <span class="input-group-text">Width</span>
                     </div>
-                    <input type="number" id="target-size" class="form-control" value="180">
+
+                    <input type="number" id="target-width" class="form-control" width="100px" max="720" min="1"
+                        value="100">
+
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Height</span>
+                    </div>
+                    <input type="number" id="target-height" class="form-control" width="100px" max="720" min="1">
                 </div>
+
+                <div class="custom-control custom-checkbox mb-3">
+                    <input type="checkbox" class="custom-control-input" id="keep-ratio" checked>
+                    <label class="custom-control-label" for="keep-ratio">Keep aspect ratio</label>
+                </div>
+
 
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
@@ -48,22 +69,20 @@
                     </div>
                     <input type="number" id="threshold" class="form-control" value="127" min="0" max="255">
                 </div>
+                
+                Colors
+                <div class="mb-3" id="colors"></div>
 
-                <div class="input-group mb-3">
-                    <div class="input-group-prepend">
-                        <span class="input-group-text">Opacity</span>
-                    </div>
-                    <input type="number" id="opacity" class="form-control" value="255"  min="0" max="255">
-                </div>
-
-                <button class="btn btn-primary" onclick="thresh()">Preview Threshold</button>
                 <button class="btn btn-primary" onclick="draw()">Draw Original</button>
+                <button class="btn btn-primary" onclick="thresh()">Preview Threshold</button>
+                <button class="btn btn-primary" onclick="drawTiling()">Draw Tiling</button>
             </div>
         </div>
     </div>
 </body>
 
 <script id="sc1"></script>
+<script src="/match.js"></script>
 <script>
     document.getElementById('sc1').src = '/script.js?ver=' + Math.random();
 </script>
